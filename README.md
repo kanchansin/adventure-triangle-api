@@ -1,118 +1,161 @@
-# Adventure Triangle - Full Stack Adventure Platform
+# Adventure Triangle
 
-**The World's First Global Unified Ecosystem for Adventure Seekers.**
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
+[![Next.js Version](https://img.shields.io/badge/next-%5E14.0.0-black)](https://nextjs.org/)
+[![Express Version](https://img.shields.io/badge/express-%5E4.18.2-blue)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=flat&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
-Adventure Triangle is a comprehensive full-stack application connecting thrill-seekers with extraordinary experiences across **Water**, **Air**, and **Land**. This repository houses the complete **MERN (MongoDB, Express, React/Next.js, Node.js)** architecture.
-
-![Architecture](https://img.shields.io/badge/Architecture-Full%20Stack-blue)
-![Frontend](https://img.shields.io/badge/Frontend-Next.js%2014-black)
-![Backend](https://img.shields.io/badge/Backend-Express%20%2B%20MongoDB-green)
-
----
-
-## Full Stack Architecture
-
-This application is built using a modern **Full Stack MERN** architecture, ensuring seamless communication between the client and server.
-
-- **Frontend (Client)**: Built with **Next.js 14** (React) and **TypeScript** for a responsive, type-safe, and high-performance user interface.
-- **Backend (Server)**: Powered by **Node.js** and **Express**, providing a robust RESTful API.
-- **Database**: **MongoDB** stores all user, partner, and event data, managed via **Mongoose**.
-- **DevOps**: Integrated linting, rigorous type checking, and modern development tooling.
-
-## Project Overview
-
-This project implements a high-performance pre-launch landing page and a robust backend API to manage user interest, partner onboarding, and event registrations.
-
-### Core Features
-
-- ** immersive User Interface**:
-  - Dynamic Hero section with particle animations.
-  - Interactive "Mission" section exploring the three elements (Water, Air, Land).
-  - Glassmorphism design aesthetics using vanilla CSS and modules.
-  - responsive layout for all devices.
-
-- **Registration Systems**:
-  - **Beta Access**: Multi-step form capturing user adventure interests and experience levels.
-  - **Partner Portal**: Onboarding flow for tour operators and guides.
-  - **Launch Event**: RSVP system for upcoming physical events.
-
-- **Backend API**:
-  - RESTful architecture using Node.js & Express.
-  - **Security**: Implemented with Helmet, CORS, and Rate Limiting.
-  - **Validation**: Strict request validation using Zod.
-  - **Logging**: Comprehensive system logging with Winston.
-  - **Database**: MongoDB integration via Mongoose.
-  - **Documentation**: Swagger/OpenAPI integration.
+**Adventure Triangle** is the world's first global adventure ecosystem. This full-stack application includes a modern frontend built with **Next.js** and a robust Node.js backend. It powers user registrations, partner onboarding, launch event management, and system analytics.
 
 ---
 
-## Technology Stack
+## Table of Contents
 
-### Client (`/client`)
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-- **Language**: TypeScript
-- **Styling**: CSS Modules, Global CSS variables
-- **State Management**: React Hooks (`useState`, `useEffect`)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Backend Setup (Server)](#backend-setup-server)
+  - [Frontend Setup (Client)](#frontend-setup-client)
+- [API Documentation](#api-documentation)
+- [Project Structure](#project-structure)
 
-### Server (`/server`)
-- **Runtime**: Node.js
+
+---
+
+## Features
+
+- **User Management**: Beta user registration with validation for adventure interests and experience levels.
+- **Partner Onboarding**: Specialized workflows for adventure operators, equipment rentals, and training centers.
+- **Interactive UI**: Responsive frontend built with Next.js and TailwindCSS.
+- **Event Orchestration**: Management of launch event registrations.
+- **Security & Logging**:
+    - **Backend**: `Helmet`, `express-rate-limit`, `Winston` logging, `Zod` validation.
+    - **Frontend**: Secure API integration and form handling.
+- **Email Integration**: Built-in specialized email services using SendGrid.
+
+---
+
+## Architecture
+
+The application follows a Client-Server architecture with a Next.js frontend and Express backend.
+
+```
+┌─────────────────────┐      HTTP / REST API      ┌──────────────────────┐
+│   Client / Frontend │ ◄──────────────────────►  │   Backend / Server   │
+│   (Next.js)         │                           │   (Node.js + Express)│
+│   Port: 3000        │                           │   Port: 5000         │
+└─────────────────────┘                           └──────────┬───────────┘
+                                                             │
+                                                             ▼
+                                                  ┌──────────────────────┐
+                                                  │     MongoDB Atlas    │
+                                                  │      (Database)      │
+                                                  └──────────────────────┘
+```
+
+---
+
+## Tech Stack
+
+### Frontend
+- **Framework**: Next.js (React)
+- **Styling**: TailwindCSS
+- **State Management**: React Hooks
+- **HTTP Client**: Axios/Fetch API
+
+### Backend
+- **Runtime**: Node.js (v20+)
 - **Framework**: Express.js
-- **Database**: MongoDB (Mongoose ODM)
+- **Database**: MongoDB with Mongoose ODM
 - **Validation**: Zod
+- **Documentation**: Swagger UI & JSDoc
 - **Logging**: Winston
-- **API Docs**: Swagger UI Express
 
 ---
 
 ## Getting Started
 
-Follow these instructions to set up the project locally.
+To run the full application, you need to set up and run both the **server** and the **client**.
 
 ### Prerequisites
-- Node.js (v20+ recommended)
-- MongoDB (Local instance or Atlas connection string)
-- npm or yarn
 
-### 1. Server Setup
+| Requirement | Version |
+|-------------|---------|
+| Node.js     | ≥ 20.0.0 |
+| npm         | ≥ 10.0.0 |
+| MongoDB     | Atlas or Local |
 
-Navigate to the server directory and install dependencies:
+### Backend Setup (Server)
 
-```bash
-cd server
-npm install
-```
+1.  **Navigate to the server directory:**
+    ```bash
+    cd server
+    ```
 
-Create a `.env` file in the `server` directory:
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/adventure_triangle
-NODE_ENV=development
-# Optional: SENDGRID_API_KEY=your_key_here
-```
+3.  **Configure Environment:**
+    Create a `.env` file in the `server/` directory:
+    ```bash
+    cp .env.example .env
+    ```
+    **Required Variables:**
+    ```env
+    PORT=5000
+    DATABASE_URL=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/adventure_triangle
+    RATE_LIMIT_WINDOW_MS=3600000
+    RATE_LIMIT_MAX_REQUESTS=100
+    SENDGRID_API_KEY=SG.your_key_here
+    ```
 
-Start the development server:
+4.  **Start the Server:**
+    ```bash
+    npm run dev
+    ```
+    *The server runs on [http://localhost:5000](http://localhost:5000)*
 
-```bash
-npm run dev
-```
-*The server will start on `http://localhost:5000`.*
+### Frontend Setup (Client)
 
-### 2. Client Setup
+1.  **Open a new terminal and navigate to the client directory:**
+    ```bash
+    cd client
+    ```
 
-Open a new terminal, navigate to the client directory, and install dependencies:
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-```bash
-cd client
-npm install
-```
+3.  **Configure Environment:**
+    Create a `.env.local` file in the `client/` directory if needed.
+    *(Note: The Next.js proxy is configured to look for the backend at http://localhost:5000)*
 
-Start the frontend development server:
+4.  **Start the Client:**
+    ```bash
+    npm run dev
+    ```
+    *The frontend runs on [http://localhost:3000](http://localhost:3000)*
 
-```bash
-npm run dev
-```
-*The application will be accessible at `http://localhost:3000`.*
+---
+
+## API Documentation
+
+The backend includes fully interactive Swagger UI documentation.
+
+*   **Swagger UI**: [http://localhost:5000/api-docs](http://localhost:5000/api-docs)
+*   **Postman Collection**: [View Documentation](https://documenter.getpostman.com/view/40737737/2sB3dTs84S)
+
+### Core Endpoints
+*   `GET /`: Welcome & API Index
+*   `GET /api/v1/health`: System status check
+*   `POST /api/v1/users/register`: Register a new adventurer
+*   `POST /api/v1/partners/register`: Onboard a new partner
+*   `POST /api/v1/events/register`: Sign up for launch events
 
 ---
 
@@ -120,40 +163,19 @@ npm run dev
 
 ```
 adventure-triangle-api/
-├── client/                 # Next.js Frontend
+├── client/             # Frontend Next.js application
 │   ├── app/
-│   │   ├── components/     # Reusable UI components (Hero, About, Forms)
-│   │   ├── globals.css     # Global styles & variables
-│   │   ├── layout.tsx      # Root layout
-│   │   └── page.tsx        # Main entry page
-│   └── public/             # Static assets
-├── server/                 # Express Backend
+│   ├── public/
+│   ├── next.config.ts
+│   └── package.json
+├── server/             # Backend Node.js application
 │   ├── src/
-│   │   ├── controllers/    # Request logic
-│   │   ├── models/         # Mongoose schemas
-│   │   ├── routes/         # API routes
-│   │   └── server.js       # Entry point
-│   ├── logs/               # Application logs
-│   └── Adventure_Triangle.postman_collection.json # API Tests
-└── README.md
+│   │   ├── config/     # DB & Swagger config
+│   │   ├── routes/     # API routes
+│   │   └── server.js   # Entry point
+│   ├── .env.example
+│   └── package.json
+└── README.md           # Main project documentation
 ```
 
-## API Documentation & Testing
-
-### Swagger UI
-Once the server is running, you can access the interactive API documentation at:
-`http://localhost:5000/api-docs`
-
-### Postman
-A Postman collection is included in `server/Adventure_Triangle.postman_collection.json`. Import this file into Postman to test all endpoints (User Register, Partner Register, Stats, etc.).
-
 ---
-
-## Contribution
-
-This project is part of the Adventure Triangle initiative.
-**Author**: Kanchan Singh
-
----
-
-*Built with ❤️ for adventurers worldwide.*

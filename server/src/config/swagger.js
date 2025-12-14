@@ -19,8 +19,8 @@ const options = {
     },
     servers: [
       {
-        url: process.env.NODE_ENV === 'production' 
-          ? 'https://your-production-url.railway.app' 
+        url: process.env.NODE_ENV === 'production'
+          ? 'https://your-production-url.railway.app'
           : 'http://localhost:3000',
         description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server'
       }
@@ -41,6 +41,10 @@ const options = {
       {
         name: 'Logs',
         description: 'API logging and analytics'
+      },
+      {
+        name: 'System',
+        description: 'Health checks and system status'
       }
     ],
     components: {
@@ -52,13 +56,13 @@ const options = {
             fullName: { type: 'string' },
             email: { type: 'string', format: 'email' },
             phone: { type: 'string' },
-            adventureInterests: { 
-              type: 'array', 
+            adventureInterests: {
+              type: 'array',
               items: { type: 'string', enum: ['water', 'air', 'land'] }
             },
-            experienceLevel: { 
-              type: 'string', 
-              enum: ['beginner', 'intermediate', 'advanced'] 
+            experienceLevel: {
+              type: 'string',
+              enum: ['beginner', 'intermediate', 'advanced']
             },
             location: { type: 'string' },
             hearAboutUs: { type: 'string' },
@@ -74,20 +78,20 @@ const options = {
             contactPerson: { type: 'string' },
             email: { type: 'string', format: 'email' },
             phone: { type: 'string' },
-            businessType: { 
-              type: 'string', 
-              enum: ['tour_operator', 'equipment_rental', 'accommodation', 'training_center', 'other'] 
+            businessType: {
+              type: 'string',
+              enum: ['tour_operator', 'equipment_rental', 'accommodation', 'training_center', 'other']
             },
-            adventureTypes: { 
-              type: 'array', 
+            adventureTypes: {
+              type: 'array',
               items: { type: 'string', enum: ['water', 'air', 'land'] }
             },
             location: { type: 'string' },
             website: { type: 'string', format: 'uri' },
             description: { type: 'string' },
-            status: { 
-              type: 'string', 
-              enum: ['pending', 'approved', 'rejected'] 
+            status: {
+              type: 'string',
+              enum: ['pending', 'approved', 'rejected']
             },
             createdAt: { type: 'string', format: 'date-time' }
           }
@@ -99,9 +103,9 @@ const options = {
             fullName: { type: 'string' },
             email: { type: 'string', format: 'email' },
             phone: { type: 'string' },
-            attendeeType: { 
-              type: 'string', 
-              enum: ['user', 'partner', 'investor', 'media'] 
+            attendeeType: {
+              type: 'string',
+              enum: ['user', 'partner', 'investor', 'media']
             },
             dietaryRestrictions: { type: 'string' },
             confirmed: { type: 'boolean' },
@@ -133,7 +137,7 @@ const options = {
       }
     }
   },
-  apis: ['./src/routes/*.js']
+  apis: ['./src/routes/*.js', './src/app.js']
 };
 
 const swaggerSpec = swaggerJsdoc(options);

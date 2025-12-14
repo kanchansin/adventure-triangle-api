@@ -33,6 +33,32 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customSiteTitle: 'Adventure Triangle API',
 }));
 
+/**
+ * @swagger
+ * /api/v1/health:
+ *   get:
+ *     summary: Check API health status
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: API is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: healthy
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *                 database:
+ *                   type: string
+ *                   example: connected
+ *                 uptime:
+ *                   type: number
+ */
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
@@ -42,6 +68,30 @@ app.get('/api/v1/health', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Welcome message and API version
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: Welcome message
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Welcome to Adventure Triangle API
+ *                 version:
+ *                   type: string
+ *                 documentation:
+ *                   type: string
+ *                 health:
+ *                   type: string
+ */
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to Adventure Triangle API',
