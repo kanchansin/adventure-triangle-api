@@ -1,7 +1,5 @@
 const winston = require('winston');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const ApiLog = require('../models/ApiLog');
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -36,15 +34,13 @@ const requestLogger = async (req, res, next) => {
     });
 
     try {
-      await prisma.apiLog.create({
-        data: {
-          endpoint: req.originalUrl,
-          method: req.method,
-          statusCode: res.statusCode,
-          responseTime,
-          ipAddress: req.ip,
-          userAgent: req.get('user-agent') || 'unknown'
-        }
+      await ApiLog.create({
+        endpoint: req.originalUrl,
+        method: req.method,
+        statusCode: res.statusCode,
+        responseTime,
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent') || 'unknown'
       });
     } catch (error) {
       logger.error('Failed to log to database:', error);

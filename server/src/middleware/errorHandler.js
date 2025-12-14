@@ -8,19 +8,27 @@ const errorHandler = (err, req, res, next) => {
     method: req.method
   });
 
-  
-  if (err.code?.startsWith('P')) {
-    return res.status(400).json({
+  if (err.code === 11000) {
+    return res.status(409).json({
       success: false,
       error: {
-        code: 'DATABASE_ERROR',
-        message: 'A database error occurred',
-        ...(process.env.NODE_ENV === 'development' && { details: err.message })
+        code: 'DUPLICATE_ENTRY',
+        message: 'Duplicate value entered for a unique field',
+        details: err.keyValue
       }
     });
   }
 
-  
+  if (err.name === 'ValidationError') {
+    return res.status(400).json({
+      success: false,
+      error: {
+        code: 'VALIDATION_ERROR',
+        message: Object.values(err.errors).map(val => val.message).join(', ')
+      }
+    });
+  }
+
   if (err.name === 'ZodError') {
     return res.status(400).json({
       success: false,
@@ -32,13 +40,12 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  
   res.status(err.statusCode || 500).json({
     success: false,
     error: {
       code: err.code || 'INTERNAL_SERVER_ERROR',
-      message: process.env.NODE_ENV === 'production' 
-        ? 'An unexpected error occurred' 
+      message: process.env.NODE_ENV === 'production'
+        ? 'An unexpected error occurred'
         : err.message
     }
   });

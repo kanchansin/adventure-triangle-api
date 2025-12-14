@@ -1,7 +1,11 @@
 const sgMail = require('@sendgrid/mail');
 const { logger } = require('../middleware/logger');
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
+if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_API_KEY.startsWith('SG.')) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+} else {
+  logger.warn('SendGrid API Key is missing or invalid. Emails will not be sent.');
+}
 
 const templates = {
   userWelcome: (data) => ({
