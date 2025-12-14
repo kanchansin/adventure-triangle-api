@@ -3,10 +3,9 @@ const { logger } = require('../middleware/logger');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
 
-// Email templates
 const templates = {
   userWelcome: (data) => ({
-    subject: 'Welcome to Adventure Triangle! 🏔️',
+    subject: 'Welcome to Adventure Triangle!',
     html: `
       <!DOCTYPE html>
       <html>
@@ -23,7 +22,7 @@ const templates = {
       <body>
         <div class="container">
           <div class="header">
-            <h1>🏔️ Welcome to Adventure Triangle!</h1>
+            <h1>Welcome to Adventure Triangle!</h1>
           </div>
           <div class="content">
             <p>Hi ${data.name},</p>
@@ -31,10 +30,10 @@ const templates = {
             <p><strong>Your Adventure Interests:</strong> ${data.adventureInterests}</p>
             <p>Get ready to explore water, air, and land adventures like never before. We'll keep you updated on:</p>
             <ul>
-              <li>🌊 Exclusive adventure opportunities</li>
-              <li>🎯 Early access to our platform launch</li>
-              <li>🎉 Special events and community meetups</li>
-              <li>💡 Adventure tips and inspiration</li>
+              <li>Exclusive adventure opportunities</li>
+              <li>Early access to our platform launch</li>
+              <li>Special events and community meetups</li>
+              <li>Adventure tips and inspiration</li>
             </ul>
             <p>Click below to verify your email and complete your registration:</p>
             <a href="${process.env.FRONTEND_URL}/verify/${data.verificationToken}" class="button">Verify Email</a>
@@ -66,7 +65,7 @@ const templates = {
       <body>
         <div class="container">
           <div class="header">
-            <h1>🤝 Partner Application Received!</h1>
+            <h1>Partner Application Received!</h1>
           </div>
           <div class="content">
             <p>Hi ${data.contactPerson},</p>
@@ -85,7 +84,7 @@ const templates = {
   }),
 
   eventConfirmation: (data) => ({
-    subject: '🎉 Launch Event Registration Confirmed - Adventure Triangle',
+    subject: 'Launch Event Registration Confirmed - Adventure Triangle',
     html: `
       <!DOCTYPE html>
       <html>
@@ -101,7 +100,7 @@ const templates = {
       <body>
         <div class="container">
           <div class="header">
-            <h1>🎉 You're Registered!</h1>
+            <h1>You're Registered!</h1>
           </div>
           <div class="content">
             <p>Hi ${data.fullName},</p>
@@ -115,7 +114,7 @@ const templates = {
             </div>
             <p>Get ready for an unforgettable evening celebrating the launch of the world's first global adventure ecosystem!</p>
             <p>We'll send you the event link and additional details closer to the date.</p>
-            <p>See you there! 🚀</p>
+            <p>See you there!</p>
             <p><strong>#FeelTheAdventure</strong></p>
           </div>
         </div>
@@ -168,7 +167,6 @@ const templates = {
  */
 const sendEmail = async ({ to, subject, template, data }) => {
   try {
-    // If SendGrid API key is not set, log the email instead
     if (!process.env.SENDGRID_API_KEY) {
       logger.info('Email would be sent (SendGrid not configured):', {
         to,

@@ -7,7 +7,6 @@ const { requestLogger } = require('./middleware/logger');
 const { errorHandler } = require('./middleware/errorHandler');
 const { rateLimiter } = require('./middleware/rateLimiter');
 
-// Route imports
 const userRoutes = require('./routes/userRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const eventRoutes = require('./routes/eventRoutes');
@@ -15,32 +14,25 @@ const logRoutes = require('./routes/logRoutes');
 
 const app = express();
 
-// Security middleware
 app.use(helmet());
 
-// CORS configuration
 app.use(cors({
   origin: process.env.FRONTEND_URL || '*',
   credentials: true,
 }));
 
-// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging
 app.use(requestLogger);
 
-// Rate limiting
 app.use('/api/', rateLimiter);
 
-// API Documentation
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Adventure Triangle API',
 }));
 
-// Health check endpoint
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
@@ -50,7 +42,6 @@ app.get('/api/v1/health', (req, res) => {
   });
 });
 
-// Root endpoint
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to Adventure Triangle API',
@@ -60,14 +51,12 @@ app.get('/', (req, res) => {
   });
 });
 
-// API Routes
 const apiVersion = process.env.API_VERSION || 'v1';
 app.use(`/api/${apiVersion}/users`, userRoutes);
 app.use(`/api/${apiVersion}/partners`, partnerRoutes);
 app.use(`/api/${apiVersion}/events`, eventRoutes);
 app.use(`/api/${apiVersion}/logs`, logRoutes);
 
-// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -79,7 +68,6 @@ app.use((req, res) => {
   });
 });
 
-// Global error handler
 app.use(errorHandler);
 
 module.exports = app;

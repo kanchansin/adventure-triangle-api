@@ -3,7 +3,6 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-// Winston logger configuration
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
@@ -22,14 +21,12 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-// Request logging middleware
 const requestLogger = async (req, res, next) => {
   const start = Date.now();
 
   res.on('finish', async () => {
     const responseTime = Date.now() - start;
 
-    // Log to console
     logger.info({
       method: req.method,
       endpoint: req.originalUrl,
@@ -38,7 +35,6 @@ const requestLogger = async (req, res, next) => {
       ip: req.ip
     });
 
-    // Log to database (async, don't block response)
     try {
       await prisma.apiLog.create({
         data: {

@@ -23,7 +23,7 @@ const registerPartner = async (req, res, next) => {
       description
     } = req.body;
 
-    // Check if partner already exists
+    
     const existingPartner = await prisma.partner.findUnique({
       where: { email }
     });
@@ -39,7 +39,7 @@ const registerPartner = async (req, res, next) => {
       });
     }
 
-    // Create partner
+    
     const partner = await prisma.partner.create({
       data: {
         companyName,
@@ -55,7 +55,7 @@ const registerPartner = async (req, res, next) => {
       }
     });
 
-    // Send confirmation email
+    
     try {
       await sendEmail({
         to: email,
@@ -204,7 +204,7 @@ const updatePartnerStatus = async (req, res, next) => {
       data: { status }
     });
 
-    // Send status update email
+    
     try {
       await sendEmail({
         to: partner.email,

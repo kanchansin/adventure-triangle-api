@@ -1,6 +1,6 @@
 const { z } = require('zod');
 
-// User Registration Schema
+
 const userRegistrationSchema = z.object({
   fullName: z.string()
     .min(2, 'Full name must be at least 2 characters')
@@ -35,7 +35,7 @@ const userRegistrationSchema = z.object({
     .max(100, 'Response must not exceed 100 characters')
 });
 
-// Partner Registration Schema
+
 const partnerRegistrationSchema = z.object({
   companyName: z.string()
     .min(2, 'Company name must be at least 2 characters')
@@ -82,7 +82,7 @@ const partnerRegistrationSchema = z.object({
     .max(1000, 'Description must not exceed 1000 characters')
 });
 
-// Event Registration Schema
+
 const eventRegistrationSchema = z.object({
   fullName: z.string()
     .min(2, 'Full name must be at least 2 characters')
@@ -107,7 +107,7 @@ const eventRegistrationSchema = z.object({
     .nullable()
 });
 
-// Newsletter Subscription Schema
+
 const newsletterSchema = z.object({
   email: z.string()
     .email('Invalid email format')

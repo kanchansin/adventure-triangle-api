@@ -19,7 +19,7 @@ const registerForEvent = async (req, res, next) => {
       dietaryRestrictions
     } = req.body;
 
-    // Check if already registered
+    
     const existingRegistration = await prisma.eventRegistration.findFirst({
       where: { email }
     });
@@ -35,7 +35,7 @@ const registerForEvent = async (req, res, next) => {
       });
     }
 
-    // Create event registration
+    
     const registration = await prisma.eventRegistration.create({
       data: {
         fullName,
@@ -47,7 +47,7 @@ const registerForEvent = async (req, res, next) => {
       }
     });
 
-    // Send confirmation email
+    
     try {
       await sendEmail({
         to: email,
@@ -153,7 +153,7 @@ const getEventStats = async (req, res, next) => {
       }
     });
 
-    // Calculate dietary restrictions breakdown
+    
     const withDietary = await prisma.eventRegistration.count({
       where: {
         dietaryRestrictions: {
@@ -191,7 +191,7 @@ const cancelRegistration = async (req, res, next) => {
       where: { id }
     });
 
-    // Send cancellation email
+    
     try {
       await sendEmail({
         to: registration.email,

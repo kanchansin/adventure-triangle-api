@@ -11,7 +11,6 @@ const server = app.listen(PORT, () => {
   logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
-// Graceful shutdown
 process.on('SIGTERM', () => {
   logger.info('SIGTERM signal received: closing HTTP server');
   server.close(() => {
@@ -28,7 +27,6 @@ process.on('SIGINT', () => {
   });
 });
 
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   logger.error('Unhandled Rejection:', err);
   server.close(() => {

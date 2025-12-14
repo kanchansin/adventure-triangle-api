@@ -8,7 +8,7 @@ const errorHandler = (err, req, res, next) => {
     method: req.method
   });
 
-  // Prisma errors
+  
   if (err.code?.startsWith('P')) {
     return res.status(400).json({
       success: false,
@@ -20,7 +20,7 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Validation errors (Zod)
+  
   if (err.name === 'ZodError') {
     return res.status(400).json({
       success: false,
@@ -32,7 +32,7 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Default error
+  
   res.status(err.statusCode || 500).json({
     success: false,
     error: {

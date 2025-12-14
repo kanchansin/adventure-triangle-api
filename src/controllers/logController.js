@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
  */
 const getStats = async (req, res, next) => {
   try {
-    // Get counts
+    
     const [totalUsers, totalPartners, totalEventRegistrations, totalApiCalls] = await Promise.all([
       prisma.user.count(),
       prisma.partner.count(),
@@ -17,14 +17,14 @@ const getStats = async (req, res, next) => {
       prisma.apiLog.count()
     ]);
 
-    // Calculate average response time
+    
     const avgResponseTime = await prisma.apiLog.aggregate({
       _avg: {
         responseTime: true
       }
     });
 
-    // Get error rate
+    
     const errorCount = await prisma.apiLog.count({
       where: {
         statusCode: {
@@ -33,7 +33,7 @@ const getStats = async (req, res, next) => {
       }
     });
 
-    // Get recent activity
+    
     const recentLogs = await prisma.apiLog.findMany({
       take: 10,
       orderBy: { createdAt: 'desc' },
@@ -46,7 +46,7 @@ const getStats = async (req, res, next) => {
       }
     });
 
-    // Get endpoint usage statistics
+    
     const endpointStats = await prisma.apiLog.groupBy({
       by: ['endpoint'],
       _count: true,
@@ -149,7 +149,7 @@ const trackEvent = async (req, res, next) => {
       });
     }
 
-    // Log the custom event (in production, this might go to an analytics service)
+    
     const log = await prisma.apiLog.create({
       data: {
         endpoint: `/track/${event}`,

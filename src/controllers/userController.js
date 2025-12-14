@@ -22,7 +22,7 @@ const registerUser = async (req, res, next) => {
       hearAboutUs
     } = req.body;
 
-    // Check if user already exists
+    
     const existingUser = await prisma.user.findUnique({
       where: { email }
     });
@@ -38,10 +38,10 @@ const registerUser = async (req, res, next) => {
       });
     }
 
-    // Generate verification token
+    
     const verificationToken = uuidv4();
 
-    // Create user
+    
     const user = await prisma.user.create({
       data: {
         fullName,
@@ -55,7 +55,7 @@ const registerUser = async (req, res, next) => {
       }
     });
 
-    // Send welcome email
+    
     try {
       await sendEmail({
         to: email,
@@ -69,7 +69,7 @@ const registerUser = async (req, res, next) => {
       });
     } catch (emailError) {
       logger.error('Failed to send welcome email:', emailError);
-      // Don't fail registration if email fails
+      
     }
 
     logger.info(`New user registered: ${email}`);
@@ -123,7 +123,7 @@ const verifyEmail = async (req, res, next) => {
       });
     }
 
-    // Update user verification status
+    
     await prisma.user.update({
       where: { id: user.id },
       data: {
