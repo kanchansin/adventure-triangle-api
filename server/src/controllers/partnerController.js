@@ -1,14 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
+const Partner = require('../models/Partner');
 const { sendEmail } = require('../services/emailService');
 const { logger } = require('../middleware/logger');
 
-const prisma = new PrismaClient();
-
-/**
- * @desc    Register a new partner
- * @route   POST /api/v1/partners/register
- * @access  Public
- */
 const registerPartner = async (req, res, next) => {
   try {
     const {
@@ -23,10 +16,7 @@ const registerPartner = async (req, res, next) => {
       description
     } = req.body;
 
-    
-    const existingPartner = await prisma.partner.findUnique({
-      where: { email }
-    });
+    const existingPartner = await Partner.findOne({ email });
 
     if (existingPartner) {
       return res.status(409).json({
@@ -39,23 +29,19 @@ const registerPartner = async (req, res, next) => {
       });
     }
 
-    
-    const partner = await prisma.partner.create({
-      data: {
-        companyName,
-        contactPerson,
-        email,
-        phone,
-        businessType,
-        adventureTypes,
-        location,
-        website,
-        description,
-        status: 'pending'
-      }
+    const partner = await Partner.create({
+      companyName,
+      contactPerson,
+      email,
+      phone,
+      businessType,
+      adventureTypes,
+      location,
+      website,
+      description,
+      status: 'pending'
     });
 
-    
     try {
       await sendEmail({
         to: email,
@@ -90,11 +76,6 @@ const registerPartner = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Get all partners (for admin dashboard)
- * @route   GET /api/v1/partners
- * @access  Public (should be protected in production)
- */
 const getAllPartners = async (req, res, next) => {
   try {
     const { status, businessType, page = 1, limit = 10 } = req.query;
@@ -106,13 +87,11 @@ const getAllPartners = async (req, res, next) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const [partners, total] = await Promise.all([
-      prisma.partner.findMany({
-        where,
-        skip,
-        take: parseInt(limit),
-        orderBy: { createdAt: 'desc' }
-      }),
-      prisma.partner.count({ where })
+      Partner.find(where)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit)),
+      Partner.countDocuments(where)
     ]);
 
     res.status(200).json({
@@ -133,36 +112,32 @@ const getAllPartners = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Get partner statistics
- * @route   GET /api/v1/partners/stats
- * @access  Public
- */
 const getPartnerStats = async (req, res, next) => {
   try {
-    const totalPartners = await prisma.partner.count();
-    
-    const partnersByStatus = await prisma.partner.groupBy({
-      by: ['status'],
-      _count: true
-    });
+    const totalPartners = await Partner.countDocuments();
 
-    const partnersByType = await prisma.partner.groupBy({
-      by: ['businessType'],
-      _count: true
-    });
-
-    const recentPartners = await prisma.partner.findMany({
-      take: 5,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        companyName: true,
-        location: true,
-        businessType: true,
-        status: true,
-        createdAt: true
+    const partnersByStatus = await Partner.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
       }
-    });
+    ]);
+
+    const partnersByType = await Partner.aggregate([
+      {
+        $group: {
+          _id: '$businessType',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const recentPartners = await Partner.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select('companyName location businessType status createdAt');
 
     res.status(200).json({
       success: true,
@@ -179,11 +154,6 @@ const getPartnerStats = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Update partner status (for admin)
- * @route   PATCH /api/v1/partners/:id/status
- * @access  Public (should be protected in production)
- */
 const updatePartnerStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -199,12 +169,22 @@ const updatePartnerStatus = async (req, res, next) => {
       });
     }
 
-    const partner = await prisma.partner.update({
-      where: { id },
-      data: { status }
-    });
+    const partner = await Partner.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
 
-    
+    if (!partner) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'PARTNER_NOT_FOUND',
+          message: 'Partner not found'
+        }
+      });
+    }
+
     try {
       await sendEmail({
         to: partner.email,
@@ -232,15 +212,6 @@ const updatePartnerStatus = async (req, res, next) => {
     });
 
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'PARTNER_NOT_FOUND',
-          message: 'Partner not found'
-        }
-      });
-    }
     next(error);
   }
 };

@@ -2,7 +2,12 @@ require('dotenv').config();
 const app = require('./app');
 const { logger } = require('./middleware/logger');
 
+const connectDB = require('./config/database');
+
 const PORT = process.env.PORT || 3000;
+
+// Connect to Database
+connectDB();
 
 const server = app.listen(PORT, () => {
   logger.info(`🚀 Adventure Triangle API is running on port ${PORT}`);

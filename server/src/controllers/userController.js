@@ -1,15 +1,8 @@
-const { PrismaClient } = require('@prisma/client');
+const User = require('../models/User');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail } = require('../services/emailService');
 const { logger } = require('../middleware/logger');
 
-const prisma = new PrismaClient();
-
-/**
- * @desc    Register a new user
- * @route   POST /api/v1/users/register
- * @access  Public
- */
 const registerUser = async (req, res, next) => {
   try {
     const {
@@ -22,10 +15,7 @@ const registerUser = async (req, res, next) => {
       hearAboutUs
     } = req.body;
 
-    
-    const existingUser = await prisma.user.findUnique({
-      where: { email }
-    });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(409).json({
@@ -38,24 +28,19 @@ const registerUser = async (req, res, next) => {
       });
     }
 
-    
     const verificationToken = uuidv4();
 
-    
-    const user = await prisma.user.create({
-      data: {
-        fullName,
-        email,
-        phone,
-        adventureInterests,
-        experienceLevel,
-        location,
-        hearAboutUs,
-        verificationToken
-      }
+    const user = await User.create({
+      fullName,
+      email,
+      phone,
+      adventureInterests,
+      experienceLevel,
+      location,
+      hearAboutUs,
+      verificationToken
     });
 
-    
     try {
       await sendEmail({
         to: email,
@@ -69,7 +54,6 @@ const registerUser = async (req, res, next) => {
       });
     } catch (emailError) {
       logger.error('Failed to send welcome email:', emailError);
-      
     }
 
     logger.info(`New user registered: ${email}`);
@@ -90,18 +74,11 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Verify user email
- * @route   GET /api/v1/users/verify/:token
- * @access  Public
- */
 const verifyEmail = async (req, res, next) => {
   try {
     const { token } = req.params;
 
-    const user = await prisma.user.findUnique({
-      where: { verificationToken: token }
-    });
+    const user = await User.findOne({ verificationToken: token });
 
     if (!user) {
       return res.status(404).json({
@@ -123,14 +100,9 @@ const verifyEmail = async (req, res, next) => {
       });
     }
 
-    
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        emailVerified: true,
-        verificationToken: null
-      }
-    });
+    user.emailVerified = true;
+    user.verificationToken = null;
+    await user.save();
 
     logger.info(`Email verified for user: ${user.email}`);
 
@@ -148,33 +120,24 @@ const verifyEmail = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Get user statistics
- * @route   GET /api/v1/users/stats
- * @access  Public
- */
 const getUserStats = async (req, res, next) => {
   try {
-    const totalUsers = await prisma.user.count();
-    const verifiedUsers = await prisma.user.count({
-      where: { emailVerified: true }
-    });
+    const totalUsers = await User.countDocuments();
+    const verifiedUsers = await User.countDocuments({ emailVerified: true });
 
-    const usersByExperience = await prisma.user.groupBy({
-      by: ['experienceLevel'],
-      _count: true
-    });
-
-    const recentUsers = await prisma.user.findMany({
-      take: 5,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        fullName: true,
-        location: true,
-        experienceLevel: true,
-        createdAt: true
+    const usersByExperience = await User.aggregate([
+      {
+        $group: {
+          _id: '$experienceLevel',
+          count: { $sum: 1 }
+        }
       }
-    });
+    ]);
+
+    const recentUsers = await User.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select('fullName location experienceLevel createdAt');
 
     res.status(200).json({
       success: true,

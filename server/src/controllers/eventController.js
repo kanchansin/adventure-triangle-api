@@ -1,14 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
+const EventRegistration = require('../models/EventRegistration');
 const { sendEmail } = require('../services/emailService');
 const { logger } = require('../middleware/logger');
 
-const prisma = new PrismaClient();
-
-/**
- * @desc    Register for launch event
- * @route   POST /api/v1/events/register
- * @access  Public
- */
 const registerForEvent = async (req, res, next) => {
   try {
     const {
@@ -19,10 +12,7 @@ const registerForEvent = async (req, res, next) => {
       dietaryRestrictions
     } = req.body;
 
-    
-    const existingRegistration = await prisma.eventRegistration.findFirst({
-      where: { email }
-    });
+    const existingRegistration = await EventRegistration.findOne({ email });
 
     if (existingRegistration) {
       return res.status(409).json({
@@ -35,19 +25,15 @@ const registerForEvent = async (req, res, next) => {
       });
     }
 
-    
-    const registration = await prisma.eventRegistration.create({
-      data: {
-        fullName,
-        email,
-        phone,
-        attendeeType,
-        dietaryRestrictions,
-        confirmed: true
-      }
+    const registration = await EventRegistration.create({
+      fullName,
+      email,
+      phone,
+      attendeeType,
+      dietaryRestrictions,
+      confirmed: true
     });
 
-    
     try {
       await sendEmail({
         to: email,
@@ -84,11 +70,6 @@ const registerForEvent = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Get all event registrations
- * @route   GET /api/v1/events/registrations
- * @access  Public (should be protected in production)
- */
 const getAllRegistrations = async (req, res, next) => {
   try {
     const { attendeeType, page = 1, limit = 20 } = req.query;
@@ -99,13 +80,11 @@ const getAllRegistrations = async (req, res, next) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const [registrations, total] = await Promise.all([
-      prisma.eventRegistration.findMany({
-        where,
-        skip,
-        take: parseInt(limit),
-        orderBy: { createdAt: 'desc' }
-      }),
-      prisma.eventRegistration.count({ where })
+      EventRegistration.find(where)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit)),
+      EventRegistration.countDocuments(where)
     ]);
 
     res.status(200).json({
@@ -126,40 +105,29 @@ const getAllRegistrations = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Get event statistics
- * @route   GET /api/v1/events/stats
- * @access  Public
- */
 const getEventStats = async (req, res, next) => {
   try {
-    const totalRegistrations = await prisma.eventRegistration.count();
-    const confirmedRegistrations = await prisma.eventRegistration.count({
-      where: { confirmed: true }
+    const totalRegistrations = await EventRegistration.countDocuments();
+    const confirmedRegistrations = await EventRegistration.countDocuments({
+      confirmed: true
     });
 
-    const registrationsByType = await prisma.eventRegistration.groupBy({
-      by: ['attendeeType'],
-      _count: true
-    });
-
-    const recentRegistrations = await prisma.eventRegistration.findMany({
-      take: 10,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        fullName: true,
-        attendeeType: true,
-        createdAt: true
-      }
-    });
-
-    
-    const withDietary = await prisma.eventRegistration.count({
-      where: {
-        dietaryRestrictions: {
-          not: null
+    const registrationsByType = await EventRegistration.aggregate([
+      {
+        $group: {
+          _id: '$attendeeType',
+          count: { $sum: 1 }
         }
       }
+    ]);
+
+    const recentRegistrations = await EventRegistration.find()
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .select('fullName attendeeType createdAt');
+
+    const withDietary = await EventRegistration.countDocuments({
+      dietaryRestrictions: { $ne: null }
     });
 
     res.status(200).json({
@@ -178,20 +146,22 @@ const getEventStats = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Cancel event registration
- * @route   DELETE /api/v1/events/registrations/:id
- * @access  Public
- */
 const cancelRegistration = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const registration = await prisma.eventRegistration.delete({
-      where: { id }
-    });
+    const registration = await EventRegistration.findByIdAndDelete(id);
 
-    
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'REGISTRATION_NOT_FOUND',
+          message: 'Registration not found'
+        }
+      });
+    }
+
     try {
       await sendEmail({
         to: registration.email,
@@ -216,15 +186,6 @@ const cancelRegistration = async (req, res, next) => {
     });
 
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'REGISTRATION_NOT_FOUND',
-          message: 'Registration not found'
-        }
-      });
-    }
     next(error);
   }
 };
