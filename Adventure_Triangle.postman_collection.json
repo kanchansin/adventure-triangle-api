@@ -1,0 +1,348 @@
+{
+  "info": {
+    "name": "Adventure Triangle API",
+    "description": "Complete API collection for Adventure Triangle backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "apiVersion",
+      "value": "v1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/{{apiVersion}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "{{apiVersion}}", "health"]
+        }
+      }
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"+1234567890\",\n  \"adventureInterests\": [\"water\", \"air\"],\n  \"experienceLevel\": \"intermediate\",\n  \"location\": \"California, USA\",\n  \"hearAboutUs\": \"Social Media\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "users", "register"]
+            }
+          }
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/users/verify/:token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "users", "verify", ":token"],
+              "variable": [
+                {
+                  "key": "token",
+                  "value": "your-verification-token-here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/users/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "users", "stats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partners",
+      "item": [
+        {
+          "name": "Register Partner",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyName\": \"Ocean Adventures Co\",\n  \"contactPerson\": \"Jane Smith\",\n  \"email\": \"jane@oceanadventures.com\",\n  \"phone\": \"+1234567890\",\n  \"businessType\": \"tour_operator\",\n  \"adventureTypes\": [\"water\"],\n  \"location\": \"Miami, FL\",\n  \"website\": \"https://oceanadventures.com\",\n  \"description\": \"Premier water sports and ocean adventure operator with 15 years of experience\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/partners/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "partners", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get All Partners",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/partners?status=pending&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "partners"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Partner Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/partners/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "partners", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Update Partner Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/partners/:id/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "partners", ":id", "status"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "partner-id-here"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Register for Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Mike Johnson\",\n  \"email\": \"mike@example.com\",\n  \"phone\": \"+1234567890\",\n  \"attendeeType\": \"user\",\n  \"dietaryRestrictions\": \"Vegetarian\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/events/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "events", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get All Registrations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/events/registrations?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "events", "registrations"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Event Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/events/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "events", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Registration",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/events/registrations/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "events", "registrations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "registration-id-here"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logs & Analytics",
+      "item": [
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/logs/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "logs", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Error Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/logs/errors?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "logs", "errors"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Track Custom Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"hero_cta_clicked\",\n  \"data\": {\n    \"button\": \"Get Started\",\n    \"page\": \"landing\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/logs/track",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "logs", "track"]
+            }
+          }
+        },
+        {
+          "name": "Get API Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{apiVersion}}/logs?endpoint=/users&method=POST&page=1&limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{apiVersion}}", "logs"],
+              "query": [
+                {
+                  "key": "endpoint",
+                  "value": "/users"
+                },
+                {
+                  "key": "method",
+                  "value": "POST"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
