@@ -11,7 +11,7 @@ connectDB();
 
 const server = app.listen(PORT, () => {
   logger.info(`🚀 Adventure Triangle API is running on port ${PORT}`);
-  logger.info(`📚 API Documentation: http://localhost:${PORT}/api/docs`);
+  logger.info(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
   logger.info(`🏥 Health Check: http://localhost:${PORT}/api/v1/health`);
   logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });

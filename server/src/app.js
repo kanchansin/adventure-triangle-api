@@ -28,7 +28,7 @@ app.use(requestLogger);
 
 app.use('/api/', rateLimiter);
 
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Adventure Triangle API',
 }));
@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to Adventure Triangle API',
     version: process.env.API_VERSION || 'v1',
-    documentation: '/api/docs',
+    documentation: '/api-docs',
     health: '/api/v1/health',
   });
 });
