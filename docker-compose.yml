@@ -21,7 +21,7 @@ services:
 
   # API Service
   api:
-    build: .
+    build: ./server
     container_name: adventure_triangle_api
     ports:
       - "3000:3000"
@@ -40,7 +40,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./logs:/app/logs
+      - ./server/logs:/app/logs
     restart: unless-stopped
 
 volumes:
