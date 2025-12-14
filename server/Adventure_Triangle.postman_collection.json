@@ -7,7 +7,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:3000",
+      "value": "http://localhost:5000",
       "type": "string"
     },
     {
@@ -24,8 +24,14 @@
         "header": [],
         "url": {
           "raw": "{{baseUrl}}/api/{{apiVersion}}/health",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "{{apiVersion}}", "health"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "{{apiVersion}}",
+            "health"
+          ]
         }
       }
     },
@@ -48,8 +54,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/users/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "users", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "users",
+                "register"
+              ]
             }
           }
         },
@@ -60,8 +73,16 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/users/verify/:token",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "users", "verify", ":token"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "users",
+                "verify",
+                ":token"
+              ],
               "variable": [
                 {
                   "key": "token",
@@ -78,8 +99,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/users/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "users", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "users",
+                "stats"
+              ]
             }
           }
         }
@@ -104,8 +132,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/partners/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "partners", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "partners",
+                "register"
+              ]
             }
           }
         },
@@ -116,8 +151,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/partners?status=pending&page=1&limit=10",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "partners"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "partners"
+              ],
               "query": [
                 {
                   "key": "status",
@@ -142,8 +183,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/partners/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "partners", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "partners",
+                "stats"
+              ]
             }
           }
         },
@@ -163,8 +211,16 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/partners/:id/status",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "partners", ":id", "status"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "partners",
+                ":id",
+                "status"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -195,8 +251,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/events/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "events", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "events",
+                "register"
+              ]
             }
           }
         },
@@ -207,8 +270,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/events/registrations?page=1&limit=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "events", "registrations"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "events",
+                "registrations"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -229,8 +299,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/events/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "events", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "events",
+                "stats"
+              ]
             }
           }
         },
@@ -241,8 +318,16 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/events/registrations/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "events", "registrations", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "events",
+                "registrations",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -264,8 +349,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/logs/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "logs", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "logs",
+                "stats"
+              ]
             }
           }
         },
@@ -276,8 +368,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/logs/errors?page=1&limit=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "logs", "errors"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "logs",
+                "errors"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -307,8 +406,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/logs/track",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "logs", "track"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "logs",
+                "track"
+              ]
             }
           }
         },
@@ -319,8 +425,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/{{apiVersion}}/logs?endpoint=/users&method=POST&page=1&limit=50",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "{{apiVersion}}", "logs"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "{{apiVersion}}",
+                "logs"
+              ],
               "query": [
                 {
                   "key": "endpoint",
